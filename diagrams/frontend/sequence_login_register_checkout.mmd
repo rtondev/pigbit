@@ -1,40 +1,71 @@
-%% Sequências: Login, Registro, Checkout (frontend-focused, Português)
+# Diagrama de Sequência — Login
 
-%% Login
-
+```mermaid
 sequenceDiagram
-  participant Usuário
-  participant Frontend
-  participant API
-  Usuário->>Frontend: preenche formulário e envia
-  Frontend->>API: POST /auth/login (email, senha)
-  API-->>Frontend: 200 JWT + dados do usuário
-  Frontend->>Usuário: redireciona para /dashboard
+    autonumber
+    participant Usuario
+    participant Frontend
+    participant API
 
+    Usuario->>Frontend: Preenche email e senha
+    Frontend->>API: POST /auth/login (email, senha)
+    
+    alt Credenciais válidas
+        API-->>Frontend: 200 OK (JWT + dados do usuário)
+        Frontend->>Usuario: Redireciona para /dashboard
+    else Credenciais inválidas
+        API-->>Frontend: 401 Unauthorized
+        Frontend->>Usuario: Exibe mensagem de erro
+    end
+```
 
-%% Registro
+---
 
+# Diagrama de Sequência — Registro
+
+```mermaid
 sequenceDiagram
-  participant NovoUsuario
-  participant FrontendReg
-  participant APIReg
-  NovoUsuario->>FrontendReg: preenche form registro
-  FrontendReg->>APIReg: POST /auth/register
-  APIReg-->>FrontendReg: 201 criado
-  FrontendReg->>NovoUsuario: mostrar sucesso e redirecionar
+    autonumber
+    participant NovoUsuario
+    participant Frontend
+    participant API
 
+    NovoUsuario->>Frontend: Preenche formulário de registro
+    Frontend->>API: POST /auth/register (dados do usuário)
 
-%% Checkout (frontend -> gateway)
+    alt Dados válidos
+        API-->>Frontend: 201 Created
+        Frontend->>NovoUsuario: Mostrar sucesso
+        Frontend->>NovoUsuario: Redirecionar para login
+    else Email já cadastrado
+        API-->>Frontend: 409 Conflict
+        Frontend->>NovoUsuario: Exibir erro
+    end
+```
 
+---
+
+# Diagrama de Sequência — Checkout (Frontend → Gateway)
+
+```mermaid
 sequenceDiagram
-  participant Cliente
-  participant FrontendCO
-  participant API_CO
-  participant Gateway
-  Cliente->>FrontendCO: inicia checkout
-  FrontendCO->>API_CO: POST /checkout (criar fatura)
-  API_CO-->>FrontendCO: 201 (payment_url)
-  FrontendCO->>Gateway: redireciona para payment_url
-  Gateway-->>API_CO: (via webhook) notifica pagamento
-  API_CO->>FrontendCO: notificação via websocket / polling
+    autonumber
+    participant Cliente
+    participant Frontend
+    participant API
+    participant Gateway
 
+    Cliente->>Frontend: Inicia checkout
+    Frontend->>API: POST /checkout (criar fatura)
+
+    alt Fatura criada com sucesso
+        API-->>Frontend: 201 Created (payment_url)
+        Frontend->>Gateway: Redireciona para payment_url
+        Gateway-->>API: Webhook confirma pagamento
+        API-->>Frontend: Atualiza status (WebSocket/Polling)
+        Frontend->>Cliente: Exibe pagamento confirmado
+    else Erro na criação da fatura
+        API-->>Frontend: 500 Internal Server Error
+        Frontend->>Cliente: Exibe erro
+    end
+```
