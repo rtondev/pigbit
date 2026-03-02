@@ -1,0 +1,26 @@
+%% Hierarquia de componentes React - frontend (Português)
+graph TD
+  App["App (root)"]
+  App --> Router["Rotas / Pages"]
+  Router --> HomePage["/ - Home"]
+  Router --> LoginPage["/login"]
+  Router --> RegisterPage["/register"]
+  Router --> DashboardPage["/dashboard"]
+  Router --> CheckoutPage["/checkout/[paymentId]"]
+
+  subgraph DashboardTree["Dashboard (exemplo)"]
+    DashboardShell["DashboardShell"]
+    DashboardShell --> Sidebar["Sidebar"]
+    DashboardShell --> Content["Content Area"]
+    Content --> Widgets["Cards / Tabelas"]
+    Widgets --> Toaster["Toaster"]
+    Content --> Numpad["Numpad (pagamentos)"]
+  end
+
+  LoginPage --> AuthHeader["AuthHeader"]
+  CheckoutPage --> CheckoutForm["Checkout Form / Payment UI"]
+  CheckoutPage --> PaymentRedirect["Redirect to Payment Gateway"]
+
+  %% Componentes compartilhados
+  Sidebar --> NavLink["Nav links"]
+  Toaster --> ToastItem["Toast item"]

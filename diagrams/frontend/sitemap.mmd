@@ -1,0 +1,23 @@
+%% Sitemap / Mapa de navegação (Português)
+flowchart TD
+  Root["/ - Home"]
+  Root --> Login["/login"]
+  Root --> Register["/register"]
+  Root --> Dashboard["/(dashboard) - área autenticada"]
+  Dashboard --> DashboardHome["/dashboard - home"]
+  Dashboard --> Auditoria["/dashboard/auditoria"]
+  Dashboard --> Carteiras["/dashboard/carteiras"]
+  Root --> Checkout["/checkout/[paymentId]"]
+  Root --> Forgot["/forgot-password"]
+  Root --> Reset["/reset-password"]
+
+  subgraph Publico["Público"]
+    Root
+    Login
+    Register
+  end
+
+  subgraph Protegido["Protegido (requer login)"]
+    Dashboard
+    Checkout
+  end

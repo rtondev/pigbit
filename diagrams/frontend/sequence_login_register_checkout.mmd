@@ -1,0 +1,34 @@
+%% Sequências: Login, Registro, Checkout (frontend-focused, Português)
+
+%% Login
+sequenceDiagram
+  participant Usuário
+  participant Frontend
+  participant API
+  Usuário->>Frontend: preenche formulário e envia
+  Frontend->>API: POST /auth/login (email, senha)
+  API-->>Frontend: 200 JWT + dados do usuário
+  Frontend->>Usuário: redireciona para /dashboard
+
+%% Registro
+sequenceDiagram
+  participant NovoUsuario
+  participant FrontendReg
+  participant APIReg
+  NovoUsuario->>FrontendReg: preenche form registro
+  FrontendReg->>APIReg: POST /auth/register
+  APIReg-->>FrontendReg: 201 criado
+  FrontendReg->>NovoUsuario: mostrar sucesso e redirecionar
+
+%% Checkout (frontend -> gateway)
+sequenceDiagram
+  participant Cliente
+  participant FrontendCO
+  participant API_CO
+  participant Gateway
+  Cliente->>FrontendCO: inicia checkout
+  FrontendCO->>API_CO: POST /checkout (criar fatura)
+  API_CO-->>FrontendCO: 201 (payment_url)
+  FrontendCO->>Gateway: redireciona para payment_url
+  Gateway-->>API_CO: (via webhook) notifica pagamento
+  API_CO->>FrontendCO: notificação via websocket / polling

@@ -1,0 +1,19 @@
+%% Máquinas de estado: Sessão e Checkout/Carrinho (Português)
+stateDiagram-v2
+  %% Sessão do usuário
+  [*] --> Anonimo
+  Anonimo --> Autenticando : login()
+  Autenticando --> Autenticado : sucesso
+  Autenticando --> Anonimo : falha
+  Autenticado --> Expirado : token_expirado
+  Expirado --> Anonimo : logout()
+
+  %% Checkout / Carrinho
+  [*] --> CarrinhoVazio
+  CarrinhoVazio --> ComItens : add_item
+  ComItens --> CheckoutIniciado : iniciar_checkout
+  CheckoutIniciado --> PagamentoPendente : criar_fatura
+  PagamentoPendente --> Pago : pagamento_confirmado
+  PagamentoPendente --> FalhaPagamento : pagamento_falhou
+  Pago --> Concluido : reconciliado
+  FalhaPagamento --> ComItens : voltar_ao_carrinho

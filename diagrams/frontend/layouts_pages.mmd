@@ -1,0 +1,34 @@
+%% Layouts por página - wireframes simples em Mermaid (Português)
+flowchart LR
+  subgraph Login["Layout - Login"]
+    LHeader["Logo / Título"]
+    LForm["Formulário: email, senha, botão"]
+    LFooter["Links: registrar, esqueci senha"]
+  end
+
+  subgraph Register["Layout - Registro"]
+    RHeader["Logo / Título"]
+    RForm["Formulário: nome, email, senha, confirmar"]
+    RFooter["Termos / botão registrar"]
+  end
+
+  subgraph Dashboard["Layout - Dashboard"]
+    DHeader["AuthHeader: usuário, logout"]
+    DSidebar["Sidebar: navegação"]
+    DMain["Área principal: cards, listas"]
+    DFooter["Toasts / Notificações"]
+  end
+
+  subgraph Checkout["Layout - Checkout"]
+    CHeader["Resumo do pedido"]
+    CPayment["Form de pagamento / botão pagar"]
+    CAside["Resumo lateral: total, impostos"]
+  end
+
+  %% Relações visuais
+  LHeader --> LForm --> LFooter
+  RHeader --> RForm --> RFooter
+  DHeader --> DSidebar
+  DSidebar --> DMain
+  DMain --> DFooter
+  CHeader --> CPayment --> CAside

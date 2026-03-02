@@ -1,0 +1,39 @@
+%% Userflow detalhado - fluxo do usuário com indicações de layout e sequência (Português)
+flowchart TD
+  %% Páginas / Estados
+  A["Landing / Home"]
+  L["Login"]
+  R["Registro"]
+  D["Dashboard"]
+  P["Página de Produto"]
+  C["Checkout"]
+  PR["Pagamento (externo)"]
+  S["Sucesso / Confirmação"]
+  E["Erro / Falha"]
+  O["Logout"]
+
+  %% Fluxos principais
+  A -->|entrar| L
+  A -->|registrar| R
+  L -->|credenciais válidas| D
+  R -->|registro concluído| D
+  D --> P
+  P --> C
+  C --> PR
+  PR -->|webhook pago| S
+  PR -->|falha| E
+  S --> D
+  E --> C
+  D --> O
+
+  %% Observações de layout e sequência (anotações)
+  subgraph LayoutNotas["Notas de Layout e Sequência"]
+    LN1["Layout: header, sidebar, content area"]
+    LN2["Sequência: criar fatura -> redirecionar para pagamento -> aguardar webhook"]
+    LN3["Padrões: mostrar loader, desabilitar botões, exibir toast de erro/sucesso"]
+  end
+
+  D --> LayoutNotas
+
+  %% Sugestão de ponto de entrada para testes de usabilidade
+  click C "#" "Teste: fluxo checkout end-to-end"

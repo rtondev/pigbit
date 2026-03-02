@@ -1,0 +1,20 @@
+%% Micro-interações e feedbacks UI (Português)
+flowchart TD
+  Form["Formulário"] --> Validacao["Validação inline"]
+  Validacao -->|erro| ToastErr["Toast de erro"]
+  Validacao -->|ok| Spinner["Mostrar loader / desabilitar botão"]
+  Spinner -->|sucesso| ToastOk["Toast de sucesso / animação"]
+  Spinner -->|erro| ToastErr
+  Botao["Botão de ação"] --> Ripple["Efeito visual (tap)"]
+  Carregamento["Carregamento de lista"] --> Skeleton["Skeletons / placeholders"]
+  DragDrop["Drag and drop"] --> Reorder["Reordenar itens"]
+  ToastOk --> Undo["Ação desfazer disponível (opcional)"]
+
+  %% Observações
+  subgraph Observacoes["Observações"]
+    O1["Usar toasts para confirmações e erros"]
+    O2["Desabilitar botões durante requisições"]
+    O3["Acessibilidade: indicar status por aria-live"]
+  end
+
+  ToastOk --> Observacoes
