@@ -10,6 +10,7 @@ sequenceDiagram
   API-->>Frontend: 200 JWT + dados do usuário
   Frontend->>Usuário: redireciona para /dashboard
 
+
 %% Registro
 sequenceDiagram
   participant NovoUsuario
@@ -19,6 +20,7 @@ sequenceDiagram
   FrontendReg->>APIReg: POST /auth/register
   APIReg-->>FrontendReg: 201 criado
   FrontendReg->>NovoUsuario: mostrar sucesso e redirecionar
+
 
 %% Checkout (frontend -> gateway)
 sequenceDiagram
@@ -32,3 +34,4 @@ sequenceDiagram
   FrontendCO->>Gateway: redireciona para payment_url
   Gateway-->>API_CO: (via webhook) notifica pagamento
   API_CO->>FrontendCO: notificação via websocket / polling
+
