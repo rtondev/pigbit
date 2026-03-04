@@ -1,6 +1,6 @@
 const API_BASE = "/api";
 
-type PageResponse<T> = {
+export type PageResponse<T> = {
   content: T[];
   totalElements: number;
   totalPages: number;

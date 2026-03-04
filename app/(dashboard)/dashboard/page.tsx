@@ -5,6 +5,7 @@ import { Card } from "@/components/ui";
 import { DollarSign, ShoppingCart, TrendingUp, Receipt, Package, Wallet, ArrowDownCircle } from "lucide-react";
 import { dashboard } from "@/lib/api";
 import Link from "next/link";
+import { TransactionsStats } from "@/components/TransactionsStats";
 
 export default function DashboardPage() {
   const [metrics, setMetrics] = useState<{
@@ -79,6 +80,9 @@ export default function DashboardPage() {
           </div>
         </Card>
       </div>
+
+      <TransactionsStats />
+
       <Card>
         <h2 className="mb-4 text-base font-semibold">Volume últimos 7 dias</h2>
         {hasVolumeData ? (
