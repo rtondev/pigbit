@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui";
+import { PublicStats } from "@/components/PublicStats";
 
 export default function LandingPage() {
   return (
@@ -37,6 +38,8 @@ export default function LandingPage() {
             </Button>
           </Link>
         </div>
+
+        <PublicStats />
 
         <div className="grid gap-5 text-left md:grid-cols-3">
           <div className="rounded-2xl bg-white p-5">
