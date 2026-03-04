@@ -464,3 +464,14 @@ export const dashboard = {
   getTransaction: (id: string) =>
     api<Transaction>(`/dashboard/transactions/${id}`),
 };
+// ============ Public ============
+export const publicApi = {
+  stats: () =>
+    apiPublic<{
+      totalClients: number;
+      totalTransactions: number;
+      totalInvoices: number;
+      totalVolumeBrl: number;
+      timestamp: string;
+    }>("/public/stats"),
+};

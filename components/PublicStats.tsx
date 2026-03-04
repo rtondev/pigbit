@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Users, TrendingUp, Receipt, DollarSign } from "lucide-react";
+import { publicApi } from "@/lib/api";
 
 interface PublicStats {
   totalClients: number;
@@ -17,11 +18,8 @@ export function PublicStats() {
   useEffect(() => {
     async function loadStats() {
       try {
-        const response = await fetch("/api/public/stats");
-        if (response.ok) {
-          const data = await response.json();
-          setStats(data);
-        }
+        const data = await publicApi.stats();
+        setStats(data);
       } catch (error) {
         console.error("Erro ao carregar estatísticas públicas:", error);
       } finally {
