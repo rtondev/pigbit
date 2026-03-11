@@ -1,4 +1,9 @@
 %% Máquinas de estado: Sessão e Checkout/Carrinho (Português)
+%%
+%% Carrinho tecnicamente = pedido/fatura (Invoice): um único "item" ou produto vira
+%% uma fatura com payment_id; o status do pedido é o status da fatura (waiting → finished).
+%% Não há entidade CARRINHO separada — o fluxo é fatura + pagamento externo + webhook + WS.
+
 stateDiagram-v2
   %% Sessão do usuário
   [*] --> Anonimo
@@ -8,12 +13,13 @@ stateDiagram-v2
   Autenticado --> Expirado : token_expirado
   Expirado --> Anonimo : logout()
 
-  %% Checkout / Carrinho
+  %% Checkout / Carrinho (pedido = invoice)
   [*] --> CarrinhoVazio
-  CarrinhoVazio --> ComItens : add_item
+  CarrinhoVazio --> ComItens : add_item_ou_produto
   ComItens --> CheckoutIniciado : iniciar_checkout
-  CheckoutIniciado --> PagamentoPendente : criar_fatura
-  PagamentoPendente --> Pago : pagamento_confirmado
-  PagamentoPendente --> FalhaPagamento : pagamento_falhou
+  CheckoutIniciado --> PagamentoPendente : criar_fatura_pedido
+  %% PagamentoPendente: estado em FATURA.status + WS subscribeCheckout(payment_id)
+  PagamentoPendente --> Pago : webhook_confirmado
+  PagamentoPendente --> FalhaPagamento : webhook_falhou_ou_expirado
   Pago --> Concluido : reconciliado
   FalhaPagamento --> ComItens : voltar_ao_carrinho

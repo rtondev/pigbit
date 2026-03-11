@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Card } from "@/components/ui";
 import { invoices } from "@/lib/api";
+import { subscribeCheckout } from "@/lib/realtime";
 import toast from "react-hot-toast";
 import { Copy } from "lucide-react";
 
@@ -29,6 +30,25 @@ export default function CheckoutPage() {
       .then(setData)
       .catch((e) => setError(e instanceof Error ? e.message : "Erro ao carregar"));
   }, [paymentId]);
+
+  // Comunicação assíncrona em tempo real: webhook atualiza status → API emite → UI sem polling
+  useEffect(() => {
+    if (!paymentId || !data) return;
+    const done =
+      data.status === "finished" ||
+      data.status === "expired" ||
+      data.status === "failed";
+    if (done) return;
+    const unsubscribe = subscribeCheckout(paymentId, (payload) => {
+      setData((prev) =>
+        prev ? { ...prev, status: payload.status } : prev
+      );
+      if (payload.status === "finished" || payload.status === "confirmed") {
+        toast.success("Pagamento atualizado!");
+      }
+    });
+    return unsubscribe;
+  }, [paymentId, data?.status]);
 
   function copyAddress() {
     if (data?.payAddress) {
@@ -67,7 +87,11 @@ export default function CheckoutPage() {
   }
 
   const currencyLabel = data.cryptoCurrency ? data.cryptoCurrency.toUpperCase() : "-";
-  const isPaid = data.status === "finished" || data.status === "confirming";
+  const isPaid =
+    data.status === "finished" ||
+    data.status === "confirming" ||
+    data.status === "confirmed" ||
+    data.status === "sending";
   const isExpired = data.status === "expired";
 
   return (
